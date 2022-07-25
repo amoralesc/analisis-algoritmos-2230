@@ -1,3 +1,46 @@
+"""
+INSTRUCCIONES DE EJECUCIÓN:
+
+Lenguaje: Python 3
+El programa utiliza las siguientes librerías no estandar (requirements.txt):
+- numpy para generar secuencias de números
+Se aconseja la utilización de un virtual env para la ejecución del programa.
+
+PASOS PARA EJECUTAR EL PROGRAMA EN LINUX/MAC (Terminal):
+
+1. Crear un virtual env en la carpeta de trabajo (si no existe)
+    python3 -m venv venv
+2. Activar el virtual env (si no ha sido activado)
+    source venv/bin/activate
+3. Instalar los requerimientos
+    pip3 install -r requirements.txt
+4. Ejecutar el programa
+    python3 main.py
+
+PASOS PARA EJECUTAR EL PROGRAMA EN WINDOWS (PowerShell):
+
+1. Crear un virtual env en la carpeta de trabajo (si no existe):
+    python3 -m venv venv
+2. Activar el virtual env (si no ha sido activado)
+    venv\Scripts\activate
+El anterior comando requiere permisos de ejecución de Scripts
+    Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+3. Instalar los requerimientos
+    pip3 install -r requirements.txt
+4. Ejecutar el programa
+    python3 main.py
+
+ATENCIÓN:
+
+Dependiendo de la instalación de Python, el comando puede ser python
+
+Los parámetros de entrada del programa definen N como una lista con la
+cantidad de elementos de la secuencia a ordenar en cada prueba. Actualmente,
+esta lista está configurada con 10000, 20000 y 30000 elementos, y la
+ejecución del programa puede ser demorada. Este parámetro puede ser
+cambiado para disminuir el tiempo de ejecución.
+"""
+
 import time
 import sort
 import numpy as np
