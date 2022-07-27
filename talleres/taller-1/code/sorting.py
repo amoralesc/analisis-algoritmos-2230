@@ -18,7 +18,7 @@ def insertion_sort(seq):
     for j in range(1, len(seq)):
         k = seq[j]
         i = j - 1
-        while 0 < i and k < seq[i]:
+        while -1 < i and k < seq[i]:
             seq[i + 1] = seq[i]
             i -= 1
         seq[i + 1] = k
