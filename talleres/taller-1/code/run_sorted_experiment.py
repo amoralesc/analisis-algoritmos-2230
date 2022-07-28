@@ -2,6 +2,7 @@
 Prerrequisites:
 
     The following packages must be installed (requirements.txt):
+    - numpy
     - matplotlib
 
     The requirements can be installed through a venv as follows:
@@ -9,7 +10,7 @@ Prerrequisites:
     1. Create a virtual environment
     $ python -m venv venv
 
-    2. Activate the virtual environment (Linux/Mac)
+    2. Activate the virtual environment
     $ source venv/bin/activate
     
     3. Install the packages
@@ -22,15 +23,15 @@ Prerrequisites:
 
 Execution instructions:
 
-    $ python run_random_experiment.py <input_file> <b> <e> <s>
+    $ python run_random_experiment.py <b> <e> <s>
 
-    <input_file>: the input binary file to build the random sequence from
     <b>: the lower bound of the sequence size
     <e>: the upper bound of the sequence size
     <s>: the step size
 """
 
-import struct, sys
+import sys, time
+import numpy as np
 import matplotlib.pyplot as plt
 from sorting import *
 from experiment import *
@@ -38,27 +39,16 @@ from experiment import *
 
 def main():
     # Inputs
-    input_file = open(sys.argv[1], "rb")
-    input_buffer = input_file.read()
-    input_file.close()
-    b = int(sys.argv[2])
-    e = int(sys.argv[3])
-    s = int(sys.argv[4])
+    b = int(sys.argv[1])
+    e = int(sys.argv[2])
+    s = int(sys.argv[3])
 
-    # Data type configuration
-    element_type = int
-    element_size = 4
-    element_id = "i"
-    N = len(input_buffer) // element_size
-
-    # Read sequence as numbers
-    input_sequence = []
-    for i in range(N):
-        input_sequence += [
-            struct.unpack(
-                element_id, input_buffer[element_size * i : element_size * (i + 1)]
-            )[0]
-        ]
+    # Create a random sequence of size e, made up of random numbers
+    input_sequence = np.random.randint(
+        -(2**31), 2**31, size=e
+    ).tolist()  # tolist ensures a python list is returned
+    # Sort the sequence
+    input_sequence.sort()  # sorted through the sort built-in function
 
     # Perform experiments
     # The experiment is performed for each size of the sequence
