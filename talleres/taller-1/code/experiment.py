@@ -1,26 +1,3 @@
-"""
-Prerrequisites:
-
-    The following packages must be installed (requirements.txt):
-    - numpy
-
-    The requirements can be installed through a venv as follows:
-
-    1. Create a virtual environment
-    $ python -m venv venv
-
-    2. Activate the virtual environment
-    $ source venv/bin/activate
-    
-    3. Install the packages
-    $ pip install -r requirements.txt
-
-    If working on Windows (PowerShell), step 2 can be replaced by:
-    $ venv\Scripts\activate
-    You may need to activate the PS scripts first (one-time only):
-    $ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-"""
-
 import time
 import numpy as np
 
@@ -76,7 +53,7 @@ def regression(x, y, degree):
     Returns:
         {coefficients, r2}
     """
-
+    # Calculate the polynomial coefficients and crate the polynomial
     coeffs = np.polyfit(x, y, degree)
     p = np.poly1d(coeffs)
 

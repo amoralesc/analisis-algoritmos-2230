@@ -3,7 +3,6 @@ Prerrequisites:
 
     The following packages must be installed (requirements.txt):
     - numpy
-    - matplotlib
 
     The requirements can be installed through a venv as follows:
 
@@ -23,16 +22,15 @@ Prerrequisites:
 
 Execution instructions:
 
-    $ python run_random_experiment.py <b> <e> <s>
+    $ python run_sorted_experiment.py <b> <e> <s>
 
     <b>: the lower bound of the sequence size
     <e>: the upper bound of the sequence size
     <s>: the step size
 """
 
-import sys, time
+import sys
 import numpy as np
-import matplotlib.pyplot as plt
 from sorting import *
 from experiment import *
 
@@ -70,30 +68,8 @@ def main():
         data["improved"] += [ibr[1]]
         data["insertion"] += [inr[1]]
 
-    # Calculate the regression of the average time of each algorithm
-    # The regression should fit a polynomial of 2nd degree
-    results = {}
-    results["naive"] = regression(np.arange(b, e + 1, s), data["naive"], 2)
-    results["improved"] = regression(np.arange(b, e + 1, s), data["improved"], 2)
-    results["insertion"] = regression(np.arange(b, e + 1, s), data["insertion"], 2)
-
-    # Print the regression results
-    print("\nRegression results:")
-    print("Naive bubble sort:")
-    print(results["naive"])
-    print("Improved bubble sort:")
-    print(results["improved"])
-    print("Insertion sort:")
-    print(results["insertion"])
-
-    # Plot the results
-    plt.plot(range(b, e + 1, s), data["naive"], label="Naive bubble sort")
-    plt.plot(range(b, e + 1, s), data["improved"], label="Improved bubble sort")
-    plt.plot(range(b, e + 1, s), data["insertion"], label="Insertion sort")
-    plt.legend()
-    plt.xlabel("Sequence size (# elements)")
-    plt.ylabel("Average time (s)")
-    plt.show()
+    # To test the results (regression and plotting), use test_results.py
+    # with the data as given by the code above in a file.
 
 
 if __name__ == "__main__":
