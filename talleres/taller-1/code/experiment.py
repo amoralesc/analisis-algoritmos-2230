@@ -1,5 +1,4 @@
 import time
-import numpy as np
 
 
 def is_sorted(seq):
@@ -40,31 +39,3 @@ def do_experiment(seq, sorting_algorithm):
         sorted = sorted and is_sorted(copy_seq)
         time_total += float(end - start)
     return [sorted, time_total / float(run_times)]
-
-
-def regression(x, y, degree):
-    """Computes the regression of the given data.
-
-    Args:
-        x: a sequence of numbers
-        y: a sequence of numbers
-        degree: the degree of the polynomial to fit
-
-    Returns:
-        {coefficients, r2}
-    """
-    # Calculate the polynomial coefficients and crate the polynomial
-    coeffs = np.polyfit(x, y, degree)
-    p = np.poly1d(coeffs)
-
-    # Calculate r-squared
-    yhat = p(x)
-    ybar = np.sum(y) / len(y)
-    ssreg = np.sum((yhat - ybar) ** 2)
-    sstot = np.sum((y - ybar) ** 2)
-
-    results = {}
-    results["coeffs"] = coeffs
-    results["r_squared"] = ssreg / sstot
-
-    return results

@@ -1,25 +1,4 @@
 """
-Prerrequisites:
-
-    The following packages must be installed (requirements.txt):
-    - numpy
-
-    The requirements can be installed through a venv as follows:
-
-    1. Create a virtual environment
-    $ python -m venv venv
-
-    2. Activate the virtual environment (Linux/Mac)
-    $ source venv/bin/activate
-    
-    3. Install the packages
-    $ pip install -r requirements.txt
-
-    If working on Windows (PowerShell), step 2 can be replaced by:
-    $ venv\Scripts\activate
-    You may need to activate the PS scripts first (one-time only):
-    $ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-
 Execution instructions:
 
     $ python run_random_experiment.py <input_file> <b> <e> <s>
@@ -79,7 +58,7 @@ def main():
         data["improved"] += [ibr[1]]
         data["insertion"] += [inr[1]]
 
-    # To test the results (regression and plotting), use test_results.py
+    # To test the results (regression and plotting), use run_test_results.py
     # with the data as given by the code above in a file.
 
 

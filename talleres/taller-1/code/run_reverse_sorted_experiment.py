@@ -68,14 +68,7 @@ def main():
         data["improved"] += [ibr[1]]
         data["insertion"] += [inr[1]]
 
-    # Calculate the regression of the average time of each algorithm
-    # The regression should fit a polynomial of 2nd degree
-    results = {}
-    results["naive"] = regression(np.arange(b, e + 1, s), data["naive"], 2)
-    results["improved"] = regression(np.arange(b, e + 1, s), data["improved"], 2)
-    results["insertion"] = regression(np.arange(b, e + 1, s), data["insertion"], 2)
-
-    # To test the results (regression and plotting), use test_results.py
+    # To test the results (regression and plotting), use run_test_results.py
     # with the data as given by the code above in a file.
 
 

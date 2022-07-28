@@ -68,7 +68,7 @@ def main():
         data["improved"] += [ibr[1]]
         data["insertion"] += [inr[1]]
 
-    # To test the results (regression and plotting), use test_results.py
+    # To test the results (regression and plotting), use run_test_results.py
     # with the data as given by the code above in a file.
 
 
