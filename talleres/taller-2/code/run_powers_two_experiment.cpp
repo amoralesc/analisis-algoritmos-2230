@@ -4,7 +4,7 @@
  * 
  * Execution instructions:
  * $ ./run_powers_two_experiment <k>
- * <k>: the max power of two to test (between 0 and 19)
+ * <k>: the max power of two to test (between 0 and 20)
  */
 
 #include <iostream>
