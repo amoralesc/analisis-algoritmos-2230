@@ -3,7 +3,7 @@
  * $ g++ -std=c++11 run_powers_two_experiment.cpp reverse_binary_representation.cpp experiment.cpp -o run_powers_two_experiment
  * 
  * Execution instructions:
- * $ ./run_powers_two_experiment <r>
+ * $ ./run_powers_two_experiment <k>
  * <k>: the max power of two to test (between 0 and 19)
  */
 
@@ -32,9 +32,9 @@ int main(int argc, char* argv[]) {
     unsigned long long power2 = 1;
     for (unsigned int i = 0; i < k; i++) {
         double iterative_time = 
-            doExperiment(power2, &reverseBinaryRepresentationIterative, 100);
+            doExperiment(power2, &reverseBinaryRepresentationIterative, 1000);
         double divide_conquer_time =
-            doExperiment(power2, &reverseBinaryRepresentationDC, 100);
+            doExperiment(power2, &reverseBinaryRepresentationDC, 1000);
         
         std::cout 
             << i << " " 
