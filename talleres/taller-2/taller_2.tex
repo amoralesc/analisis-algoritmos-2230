@@ -90,8 +90,6 @@ La idea de solución consistiría entonces en dividir de dicha forma al número,
 
 Para hacer esta lógica de división y residuo, se utilizarían los operadores de división entera (también expresada como división piso) y el módulo. Así mismo, el proceso truncar el último dígito de un número, así como extraerlo, se haría utilizando estos operadores con $10$ como cociente. \par
 
-\newpage
-
 \subsubsection{Escritura del algoritmo} \label{algoritmos:iterativo:algoritmo}
 
 \begin{algorithm}[!ht]
@@ -108,9 +106,9 @@ Para hacer esta lógica de división y residuo, se utilizarían los operadores d
     \EndWhile
     \State $y \leftarrow 0$
     \While{$b > 0$}
+        \State $factor2 \leftarrow factor2 \div 2$
         \State $y \leftarrow y + \Call{Mod}{b, 10} * factor2$
         \State $b \leftarrow \lfloor b \div 10 \rfloor$
-        \State $factor2 \leftarrow factor2 \div 2$
     \EndWhile
     \State \Return $y$
 \EndProcedure
@@ -141,7 +139,7 @@ El problema de invertir un número (mediante un algoritmo dividir y vencer) se p
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[scale=0.3]{img/fig2.png}
+    \includegraphics[scale=0.25]{img/fig2.png}
     \vspace{-1em}
     \caption{Invertir un árbol binario}
     \label{fig:invertir_arbol}
@@ -151,7 +149,7 @@ Este proceso se puede asemejar al de invertir el número, donde invertir desde l
 
 \begin{figure}[!ht]
     \centering
-    \includegraphics[scale=0.3]{img/fig3.png}
+    \includegraphics[scale=0.20]{img/fig3.png}
     \vspace{-1em}
     \caption{Invertir un número mediante un algoritmo dividir y vencer}
     \label{fig:invertir_numero}
@@ -173,15 +171,15 @@ Ahora, se calculan los dígitos que se ubican entre $beg$ y $end$ inclusive
 
 Después, se dividen los dígitos de la mitad en dos grupos: los que están a la izquierda del pivote inclusive, y los que están a la derecha del pivote. \par
 
-\[ left = \lfloor 2345 \div 10^{6 - 3 - 1} \rfloor = 23 \]
+\[ left = \lfloor 2345 \div 10^{5 - 3} \rfloor = 23 \]
 
 \vspace{-1.2em}
 
-\[ right = \Call{Mod}{ 2345, 10^{6 - 3 - 1}} = 45 \]
+\[ right = \Call{Mod}{ 2345, 10^{5 - 3}} = 45 \]
 
 Luego, se pasan los dígitos de la derecha a la izquierda. Esto se puede hacer fácilmente multiplicando los dígitos de la derecha por la potencia de 10 a la pivote dígitos. \par
 
-\[ num\_mid = 45 * 10^{6 - 3 - 1} + 23 = 4523 \]
+\[ num\_mid = 45 * 10^{5 - 3} + 23 = 4523 \]
 
 Finalmente, se unen las tres partes. \par
 
@@ -238,7 +236,7 @@ Finalmente, se unen las tres partes. \par
 \Procedure{ReverseNumberAux}{$num, n, beg, q, end$}
     \State $pow_1 \leftarrow \Call{Pow}{10, n - beg + 1}$
     \State $pow_2 \leftarrow \Call{Pow}{10, n - end}$
-    \State $pow_3 \leftarrow \Call{Pow}{10, n - q - beg}$
+    \State $pow_3 \leftarrow \Call{Pow}{10, end - q}$
     \State $num\_left \leftarrow \lfloor num \div pow_1 \rfloor$
     \State $num\_right \leftarrow  \Call{Mod}{num, pow_2}$
     \State $num\_mid \leftarrow \Call{Mod}{\lfloor num \div pow_2 \rfloor, pow1 \div pow2}$
@@ -274,32 +272,110 @@ Después de cada llamado a $ReverseNumberAux$, el número tiene sus dígitos des
 
 \section{Análisis experimental} \label{experimentos}
 
-En esta sección se presentarán algunos los experimentos para confirmar los órdenes de complejidad de los dos algoritmos presentados en la sección \ref{algoritmos}. Así mismo, se comparará el algoritmo dividir y vencer contra el iterativo para determinar cuál se desempeña mejor. \par
+En esta sección se presentarán algunos los experimentos para comparar el algoritmo dividir y vencer contra el iterativo para determinar cuál se desempeña mejor. Así mismo, también servirán para confirmar los órdenes de complejidad de los dos algoritmos presentados en la sección \ref{algoritmos}. Así mismo,  \par
 
-\subsection{Potencias de dos}
+\subsection{Potencias de dos} \label{experimentos:potencias}
 
-La idea consiste en analizar las $k$ primeras potencias de $2$. Esto debido a que cada k-ésima potencia tiene $k$ bits en su representación binaria. \par
+La idea consiste en analizar las $k$ primeras potencias de $2$. Esto debido a que cada k-ésima potencia tiene $k+1$ bits en su representación binaria. \par
 
-\subsubsection{Protocolo}
+\subsubsection{Protocolo} \label{experimentos:potencias:protocolo}
 
 \begin{enumerate}
     \item Definir un número $k \in\mathbb{N}$. Se generarán las primeras $k$ potencias de $2$ desde $2^0$ hasta $2^{k-1}$.
-    \item Cada algoritmo se ejecutará 10 veces con cada potencia y se guardará el tiempo promedio de ejecución.
+    \item Cada algoritmo se ejecutará 1000 veces con cada potencia y se guardará el tiempo promedio de ejecución.
     \item Se generan los gráficos necesarios para comparar los algoritmos.
 \end{enumerate}
 
 \newpage
 
-\subsection{Números aleatorios}
+\subsection{Números aleatorios} \label{experimentos:aleatorios}
 
-La idea consiste en analizar $k$ números aleatorios de distinta cantidad de bits en su representación binaria. \par
+La idea consiste en analizar $n$ números aleatorios de distinta cantidad de bits en su representación binaria. \par
 
-\subsubsection{Protocolo}
+\subsubsection{Protocolo} \label{experimentos:aleatorios:protocolo}
 
 \begin{enumerate}
-    \item Definir un número $k \in\mathbb{N}$. Se generarán $k$ números aleatorios de distinta cantidad de dígitos.
+    \item Definir un número $n \in\mathbb{N}$. Se generarán $n$ números aleatorios de distinta cantidad de dígitos.
     \item Cada algoritmo se ejecutará 10 veces con cada número aleatorio y se guardará el tiempo promedio de ejecución.
     \item Se compara el tiempo total promedio de ejecución de ambos algoritmos, correspondiente a la suma de los tiempos promedios de ejecución del punto 2.
+    \item Repetir desde el paso 1 tantas veces como se requiera
 \end{enumerate}
+
+\section{Resultados de los experimentos}
+
+Los algoritmos se implementan en C++, y sus experimentos se realizan siguiendo el protocolo definido sección \ref{experimentos}. Los resultados de los experimentos esperan comparar ambos algoritmos, así probar (o refutar) los análisis de complejidad realizados para cada uno de ellos en la sección \ref{algoritmos}. \par
+
+Debido a que la implementación se realiza en C++, y ambos algoritmos definen una forma de calcular el número binario en donde se almacena la representación en número base-10, existe un límite equivalente a la cantidad de bits máxima que una variable númerica puede almacenar en C++. Se utiliza el tipo de variable \textit{unsigned long long}, que puede almacenar números de hasta 20 dígitos. Es por esto que el máximo número binario que se podría almacenar en esta variable es equivalente a $2^{19}=524288$, el cual es un límite impuesto sobre el algoritmo.
+
+Para el primer experimento, se espera hacer primeramente una inspección empírica de la gráfica resultante en donde se grafica el tamaño de bits de las potencias de dos contra el tiempo promedio que le toma a cada algoritmo determinar su representación binaria inversa en nanosegundos. Se esperaría que la gráfica resultante fuera una línea recta. \par
+
+Después de la inspección de la gráfica, es necesario confirmar más detalladamente si realmente los resultados prueban el análisis de complejidad. Una buena forma de confirmar esto es mediante una regresión de los datos. Ya que ambos algoritmos presentan una complejidad de $O(n)$, una regresión lineal simple es la operación adecuada para confirmar los resultados. \par
+
+La regresión lineal simple pretende ajustar una curva de la forma:
+
+\[f(X) = aX + b \]
+
+donde $X$ representaría la variable independiente (cantidad de bits) y $f(X)$ la variable dependiente (tiempo que toma calcular la representación binaria inversa). Después de la regresión, se obtienen los coeficientes del polinomio $a$ y $b$. La medida que se utiliza para determinar si la regresión se cumple es el coeficiente de determinación ($R^{2}$), el cual refleja que tan bien ajustado es el polinomio resultante a los datos de entrada. Esta se calcula así: \par
+
+\[R^{2} = \frac{\sum_{n=1}^{N} (\hat{Y_n} - \Bar{Y})^2}{\sum_{n=1}^{N} (Y_n - \Bar{Y})^2} \]
+
+en donde:
+
+\begin{itemize}
+    \item $N$ representa la cantidad de registros de las variables
+    \item $\Bar{Y}$ representa la media de la variable dependiente de entrada
+    \item $\hat{Y_n}$ representa $f(X_n)$ o el resultado de evaluar el polinomio de regresión en $X_n$
+    \item $Y_n$ representa el n-ésimo dato de la variable dependiente de entrada
+\end{itemize}
+
+$R^2$ varía en el rango $(0,1)$ y a mayores medidas de este se espera una mayor confianza en que los resultados se asemejan a un polinomio cuadrático.\par
+
+\subsection{Potencias de dos}
+
+Para el experimento con potencias de dos, se sigue el protocolo definido en la sección \ref{experimentos:potencias:protocolo}, dando como entrada $k=20$. Obtenidos los resultados, se genera el gráfico comparativo de los algoritmos presentado en la figura \ref{fig:plot}. \par
+
+\begin{figure}[!ht]
+    \centering
+    \includegraphics[scale=0.5]{img/plot.png}
+    \vspace{-1em}
+    \caption{Gráfica comparativa de potencias de dos}
+    \label{fig:plot}
+\end{figure}
+
+La inspección empírica de la gráfica parece revelar que ambos algoritmos siguen una línea recta, cumpliendo con el análisis de complejidad. Así mismo, se resalta que el algoritmo iterativo se desempeña mucho mejor que el algoritmo dividir y vencer. \par
+
+Posteriormente, se realiza la regresión lineal y se obtienen los siguientes resultados: \par
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{|l|r|r|r|}
+\hline
+Algoritmo        & \multicolumn{1}{c|}{$a$} & \multicolumn{1}{c|}{$b$} & \multicolumn{1}{c|}{$R^2$} \\ \hline
+Iterativo        & 2.782406                 & 30.204736                & 0.877880                   \\ \hline
+Dividir y vencer & 19.421654                & 32.502632                & 0.976356                   \\ \hline
+\end{tabular}
+\end{table}
+
+Como se puede ver, ambos algoritmos obtienen un buen $R^2$. Sin embargo, no tienen un ajuste bien alto, debido a que el tamaño de la muestra es muy pequeño, así como que el sistema operativo pudo haber interrumpido los procesos. Con este experimento, se puede probar que los algoritmos tienen un orden de complejidad $O(n)$.
+
+\subsection{Números aleatorios}
+
+Para el experimento con números aleatorios, se sigue el protocolo definido en la sección \ref{experimentos:aleatorios:protocolo}, dando como entrada $n \in N ~|~ N = \left< 100, 1000, 10000, 100000, 1000000, 10000000 \right>$. Los resultados de los tiempos se presentan en la siguiente tabla. \par
+
+\begin{table}[ht!]
+\centering
+\begin{tabular}{|r|r|r|}
+\hline
+\multicolumn{1}{|c|}{$n$} & \multicolumn{1}{c|}{Iterativo ($ms$)} & \multicolumn{1}{c|}{Dividir y vencer ($ms$)} \\ \hline
+100                       & 0.00699                               & 0.03291                                      \\ \hline
+1000                      & 0.06849                               & 0.32310                                      \\ \hline
+10000                     & 0.67827                               & 3.21113                                      \\ \hline
+100000                    & 6.68253                               & 31.7693                                      \\ \hline
+1000000                   & 65.8936                               & 313.527                                      \\ \hline
+10000000                  & 677.631                               & 3196.51                                      \\ \hline
+\end{tabular}
+\end{table}
+
+Como se puede evidenciar, en todos los casos de $n$ cantidad de números aleatorios, el algoritmo iterativo va más rápido que el algoritmo dividir y vencer. Aproxidamente, el algoritmo dividir y vencer es $5$ veces más lento que el iterativo. Sin embargo, cabe resaltar que ambos algoritmos tienen un orden de complejidad similar $O(n)$ y que son sus implementaciones (por ejemplo, cantidad de instrucciones) las que hacen que uno se desempeñe mejor que el otro. \par
 
 \end{document}
