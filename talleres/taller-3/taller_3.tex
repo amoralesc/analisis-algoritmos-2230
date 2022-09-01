@@ -1,0 +1,312 @@
+\documentclass[letter]{article}
+
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{dsfont}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx, color}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{mathrsfs}
+% Cambiar el estilo de las listas
+\renewcommand{\labelitemi}{$\bullet$}
+
+\MakeRobust{\Call}
+
+% Some definitions
+\floatname{algorithm}{Algoritmo}
+
+% Author info
+\title{Taller 3: Multiplicación matricial}
+\author{Alejandro Morales Contreras$^1$}
+\date{
+	$^1$Departamento de Ingeniería de Sistemas, Pontificia Universidad Javeriana\\Bogotá,  Colombia \\
+	\texttt{a.moralesc@javeriana.edu.co}\\~\\
+	\today
+}
+
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\section{Enunciado del problema} \label{enunciado}
+
+Escribir formalmente, implementar en Julia y hacer experimentos sobre un algoritmo basado en programación dinámica que resuelva el siguiennte problema: \par
+
+Calcular la parentización que minimice la cantidad de multiplicaciones escalares en una composición de matrices. \par
+
+\section{Formalización del problema} \label{formalizacion}
+
+Sean $A \in \mathbb{R}^{n \times m}$ y $B \in \mathbb{R}^{m \times p}$ matrices (nótese que la segunda dimensión de $A$ es igual a la primera dimensión de $B$), la multiplicación matricial $A B$ da como resultado una nueva matriz $C \in \mathbb{R}^{n \times p}$. La cantidad de multiplicaciones escalares necesarias para generar $C$ equivale a $n \cdotp m \cdotp p$. \par
+
+Sea $\mathbb{A}=\left< A_1, A_2, \cdots, A_n \right>$ una secuencia de matrices que cumplen la relación $A_i \in \mathbb{R}^{r_i \times c_i} \land r_i = c_{i-1}$, es importante saber cuál es la mejor forma de asociar, de dos en dos, las multiplicaciones matriciales para reducir la cantidad de multiplicaciones escalares. Esto debido a que la agrupación, de acuerdo a las dimensiones de las matrices vecinas, puede generar resultados muy diferentes. Es necesario entonces \textbf{minimizar} la cantidad de multiplicaciones escalares encontrando la mejor combinación de paréntisis (agrupación) para multiplicar las matrices. \par
+
+Nótese que $r_i = c_{i-1} \forall i \in [2, n]$, la cantidad de filas de la matriz $A_i$ es igual a la cantidad de columnas de la matriz anterior $A_{i-1}$. Es posible definir $D=\left< d_i \in \mathbb{N} ~|~ 1 \leq i \leq n + 1 \right>$ donde $d_1$ es la cantidad de filas de la primera matriz, $d_2$ es la cantidad de filas de la segunda matriz y la cantidad de columnas de la primera, y en general, $d_i = r_i = c_{i-1}$.
+
+\subsection{Definición del problema ``multiplicación matricial''} \label{formalizacion:definicion}
+
+El problema de calcular la parentización que minimice la cantidad de multiplicaciones escalares en una composición de matrices se define a partir de $\mathbb{A}=\left< A_1, A_2, \cdots, A_n  ~|~ A_i \in \mathbb{R}^{r_i \times c_i} \land r_i = c_{i-1} \right>$ una secuencia de matrices, $\mathbb{S} = \left< \text{`A'} \right> \cup \left< \text{`0'}, \text{`1'}, \cdots, \text{`9'} \right> \cup \left< \text{`('}, \text{`)'} \right>$ un conjunto de caracteres, encontrar la representación en cadena de caracteres $S$ que ilustre como agrupar los paréntesis para multiplicar dichas matrices minimizando la cantidad de multiplicaciones escalares. \par
+
+\begin{itemize}
+    \item Entradas:
+    \begin{itemize}
+        \item $D = \left< d_i \in \mathbb{N} ~|~ 1 \leq i \leq n + 1 \land d_i = r_i = c_{i-1} \right>$
+    \end{itemize}
+    \item Salidas:
+    \begin{itemize}
+        \item $S = \left< s_i \in \mathbb{S} \right>$
+    \end{itemize}
+\end{itemize}
+
+\section{Algoritmo de solución} \label{algoritmo}
+
+\subsection{Idea general de la solución} \label{algoritmo:idea}
+
+Asociar las matrices en dos grupos puede ser visto como una tarea de fuerza bruta, donde se define un $k \in [1, n]$ que separa ambos grupos con paréntesis así: $A_{1,k} A_{k+1,n}=(A_1 \cdots A_k)(A_{k+1} \cdots A_n)$, tal que esta asociación minimiza la cantidad de multiplicaciones escalares realizadas. \par
+
+Debido a que las asociaciones deben llegar hasta un punto que se tengan multiplicaciones de 2 matrices, el paso siguiente es encontrar el siguiente $k$ que minimiza la cantidad de multiplicaciones escalares para el primer grupo, y encontrar el $k$ del segundo grupo. Y en general, la secuencia de matrices se puede asociar desde $A_i$ hasta $A_j$ ($i < j$) encontrando el $i \leq k < j$ que minimiza la cantidad de multiplicaciones escalares. \par
+
+Entonces, $M_{i,j}$ es el número óptimo de multiplicaciones escalares al agrupar las matrices $A_{i,j}$ definido así: \par
+
+\[ M_{i,j} = 
+    \begin{cases} 
+        0, & \text{if } i = j, \\
+        \underset{i \leq k < j}{min} \{ M_{i,k} + M_{k+1,j} + m_{ikj} \}, & \text{if } i \neq j.
+    \end{cases} \]
+
+donde $m_{ijk}$ es el número de multiplicaciones escalares para calcular $A_{i,k} A_{k+1,j}$. \par
+
+Dado que: $A_i A_{i+1} \in \mathbb{R}^{r_i \times c_{i+1}}, A_i A_{i+1} A_{i+2} \in \mathbb{R}^{r_i \times c_{i+2}}, \cdots, A_{i,k} \in \mathbb{R}^{r_i \times c_k}, A_{k+1,j} \in \mathbb{R}^{r_{k+1} \times c_j}$ y $r_{k+1} = c_k$, entonces: \par
+
+\[ m_{ikj} = r_i c_k c_j \]
+
+Así mismo, dado que la entrada de la secuencia de matrices $\mathbb{A}$ se puede definir como la secuencia $D$ y por ende $r_i, c_i$ se pueden re-escribir como elementos de $D$, entonces: \par
+
+\[ m_{ikj} = d_{i-1} d_k d_j \]
+
+Finalmente, el problema se puede resolver por fuerza bruta y recursión. Después, se puede optimizar con una solución con programación dinámica por memoización que reduzca el cálculo de operaciones repetidas. Seguidamente, se puede generar una solución bottom-up a partir del algoritmo con memoización para finalmente implementar una solución bottom-up con backtracking para encontrar cuáles son los $k$ donde se ubican los paréntesis para minimizar la cantidad multiplicaciones escalares. \par
+
+\newpage
+
+\subsection{Escritura del algoritmo} \label{algoritmo:escritura}
+
+Donde:
+
+\begin{itemize}
+    \item $\Call{Concat}{p_1, p_2, \cdots, p_n}$ recibe $n$ cadenas de caracteres y las une en una sola en orden
+    \item $\Call{String}{x}$ recibe un valor numérico y retorna una cadena de caracteres como representación
+\end{itemize}
+
+\begin{algorithm}[!ht]
+\caption{Calcular y representar parentización que minimiza multiplicaciones escalares.}
+\begin{algorithmic}[1] 
+\Procedure{MinMatMul}{$D$}
+    \State $B \leftarrow \Call{MinMatMul\_Backtracking}{D}$
+    \State \Return $\Call{DrawParentheses}{B, 1, |D| - 1}$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[!ht]
+\caption{Calcular conjunto de paréntesis que minimizan multiplicaciones escalares.}
+\begin{algorithmic}[1] 
+\Procedure{MinMatMul\_Backtracking}{$D$}
+    \State $\textbf{let } M[ 1..|D|-1, 1..|D|-1  ] \textbf{ be a matrix filled with } 0$
+    \State $\textbf{let } B[ 1..|D|-1, 1..|D|-1  ] \textbf{ be a matrix filled with } 0$
+    \For{$i \leftarrow |D| - 2 \textbf{ to } 1 \textbf{ step } -1$}
+        \For{$j \leftarrow i + 1 \textbf{ to } |D| - 1$}
+            \State $q \leftarrow \infty$
+            \For{$k \leftarrow i \textbf{ to } j - 1$}
+                \State $v \leftarrow M[i,j] + M[k + 1, j] + D[i] D[k + 1] D[j + 1]$
+                \If{$v < q$}
+                    \State $q \leftarrow v \land B[i,j] \leftarrow k$
+                \EndIf
+            \EndFor
+            \State $M[i,j] = q$
+        \EndFor
+    \EndFor
+    \State \Return $B$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[!ht]
+\caption{Generar representación de parentización sobre las matrices.}
+\begin{algorithmic}[1] 
+\Procedure{DrawParentheses}{$B, i, j$}
+    \If{$i = j$}
+        \State \Return $\Call{Concat}{\text{``A''}, \Call{String}{i}}$
+    \Else
+        \State $k \leftarrow B[i,j]$
+        \State $left \leftarrow \Call{DrawParentheses}{B, i, k}$
+        \If{$i \neq k$}
+            \State $left \leftarrow \Call{Concat}{\text{``(''}, left, \text{``)''}}$
+        \EndIf
+        \State $right \leftarrow \Call{DrawParentheses}{B, k + 1, j}$
+        \If{$k + 1 \neq j$}
+            \State $right \leftarrow \Call{Concat}{\text{``(''}, right, \text{``)''}}$
+        \EndIf
+        \State \Return $\Call{Concat}{left, right}$
+    \EndIf
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Análisis de complejidad} \label{algoritmo:complejidad}
+
+El algoritmo de solución se divide en dos partes: encontrar las combinaciones de paréntesis que llevan a la solución óptima, y dibujar los paréntesis en una cadena de caracteres, $O = O_1 + O_2$, en donde solo se preserva la de mayor complejidad. \par
+
+La complejidad de encontrar la combinación de paréntesis se puede analizar por inspección de código: al tener tres ciclos anidados, se puede expresar como $O_1(n^3)$. \par
+
+Por su parte, dibujar los paréntesis es un algoritmo dividir y vencer, y su complejidad temporal se puede expresar como: \par
+
+\[ T(n) = 2T(\frac{n}{2}) + O(1) \]
+
+Aplicando teorema maestro:
+
+\begin{enumerate}
+    \item $1 = n^{\log_b(a-\epsilon)} = n^{\log_2(2-\epsilon)} \land \epsilon = 1 \rightarrow \Theta(n^{\log_b a}) = \Theta(n)$
+    \item $1 = n^{\log_ba} \log_2^kn = n^{\log_2 2} \log_2^kn \land k = ?$
+    \item $1 = n^{\log_b(a-\epsilon)} = n^{\log_2(2+\epsilon)} \land \epsilon = -1$
+\end{enumerate}
+
+Por ende, la complejidad de dibujar los paréntesis es $\Theta_2(n)$. Debido a que $O_1 > \Theta_2$, la complejidad del algoritmo es $O(n^3)$. \par
+
+\section{Análisis experimental} \label{experimentos}
+
+En esta sección se presentarán algunos experimentos para probar el algoritmo solución presentado con distintas configuraciones de secuencias de matrices. \par
+
+\subsection{Protocolo} \label{experimentos:protocolo}
+
+Para todas las configuraciones de secuencias de matrices, el protocolo es el mismo: \par
+
+\begin{enumerate}
+    \item Definir dentro de un archivo CSV, cada configuración de matrices a partir de la secuencia $D$ a probar, una por cada línea.
+    \item Cargar el archivo en memoria
+    \item Por cada experimento, imprimir en pantalla la asociación de paréntesis trazada
+    \item Se comentarán las conclusiones necesarias por cada experimento
+\end{enumerate}
+
+\subsubsection{Configuración de matrices iguales}
+
+Se definirá como uno de los experimentos, una configuración de matrices $D$ donde $d_i = d_{i+1} \forall i \in [1, |D| - 1]$.
+
+\subsubsection{Configuración de matrices ascendientes}
+
+Se definirá como uno de los experimentos, una configuración de matrices $D$ donde $d_i < d_{i+1} \forall i \in [1, |D| - 1]$.
+
+\subsubsection{Configuración de matrices descendientes}
+
+Se definirá como uno de los experimentos, una configuración de matrices $D$ donde $d_{i+1} < d_i \forall i \in [1, |D| - 1]$.
+
+\subsubsection{Configuración de matrices aleatorias}
+
+Se definirá una cantidad arbitraria de matrices sin ninguna configuración aparente.
+
+\section{Resultados de los experimentos} \label{resultados}
+
+El algoritmo de solución se implementa en Julia y los experimentos se realizan siguiendo el protocolo definido en la sección \ref{experimentos:protocolo}.
+
+\subsection{Configuración de matrices iguales}
+
+Para este experimento, se define la configuración $D = \left< d_i = 100 ~|~ 1 \leq i \leq 10 \right>$. Es decir, 9 matrices $\mathbb{A} = \left< A_i \in \mathbb{R}^{100 \times 100} \right>$. El resultado del experimento es: \par
+
+\[ A_1(A_2(A_3(A_4(A_5(A_6(A_7(A_8A_9))))))) \]
+
+Esta agrupación es coherente, ya que, al todas las dimensiones ser siempre iguales, el algoritmo solo va a encontrar el primer mínimo después de infinito, y nunca volver a cambiarlo. Por como está configurado el algoritmo, sencillamente coloca un paréntesis en cada $k \in [1, 9]$.
+
+\subsection{Configuración de matrices ascendentes}
+
+Para este experimento, se define la configuración $D = \left< d_i = d_{i - 1} + 10 ~|~ 1 \leq i \leq 10 \land d_1 = 10 \right>$. Es decir, 9 matrices $\mathbb{A} = \left< A_1 \in \mathbb{R}^{10 \times 20}, A_2 \in \mathbb{R}^{20 \times 30}, \cdots, A_9 \in \mathbb{R}^{90 \times 100} \right>$. El resultado del experimento es: \par
+
+\[ (((((((A_1A_2)A_3)A_4)A_5)A_6)A_7)A_8)A_9 \]
+
+Por razonamiento lógico, se puede determinar que esta configuración es coherente. Si $r_1$ es la menor cantidad de filas, y después de cada operación $A_i A_{i+1}$ la matriz resultante $\in \mathbb{R}^{r_i \times c_{i+1}}$, tiene sentido dejar siempre la matriz de menor dimensión a la izquierda para asegurar siempre la menor cantidad de operaciones. \par
+
+\subsection{Configuración de matrices ascendentes}
+
+Para este experimento, se define la configuración $D = \left< d_i = d_{i - 1} - 10 ~|~ 1 \leq i \leq 10 \land d_1 = 100 \right>$. Es decir, 9 matrices $\mathbb{A} = \left< A_1 \in \mathbb{R}^{100 \times 90}, A_2 \in \mathbb{R}^{90 \times 80}, \cdots, A_9 \in \mathbb{R}^{20 \times 10} \right>$. El resultado del experimento es: \par
+
+\[ A_1(A_2(A_3(A_4(A_5(A_6(A_7(A_8A_9))))))) \]
+
+Por razonamiento lógico, se puede determinar que esta configuración es coherente. Si $c_9$ es la menor cantidad de columnas, y después de cada operación $A_i A_{i+1}$ la matriz resultante $\in \mathbb{R}^{r_i \times c_{i+1}}$, tiene sentido dejar siempre la matriz de menor dimensión a la derecha para asegurar siempre la menor cantidad de operaciones. \par
+
+\subsection{Configuración de matrices aleatorias}
+
+Debido a que no se tiene un mecanismo confíable para determinar si el resultado del experimento es coherente, excepto calcular a mano las multiplicaciones, sencillamente se presentan los resultados obtenidos para cada configuración: \par
+
+\subsubsection{Experimento aleatorias 1}
+
+\textbf{Entrada}
+
+\begin{itemize}
+    \item $D = \left< 10,100,5,50 \right>$
+\end{itemize}
+
+\textbf{Salida}
+
+\begin{itemize}
+    \item $(A_1A_2)A_3$
+\end{itemize}
+
+\subsubsection{Experimento aleatorias 2}
+
+\textbf{Entrada}
+
+\begin{itemize}
+    \item $D = \left< 100,500,20,100,1000,25,300,100,1000 \right>$
+\end{itemize}
+
+\textbf{Salida}
+
+\begin{itemize}
+    \item $(A_1A_2)(((((A_3A_4)A_5)A_6)A_7)A_8)$
+\end{itemize}
+
+\subsubsection{Experimento aleatorias 3}
+
+\textbf{Entrada}
+
+\begin{itemize}
+    \item $D = \left< 200,10,1000,5000,200,10,10000,100,10 \right>$
+\end{itemize}
+
+\textbf{Salida}
+
+\begin{itemize}
+    \item $A_1((((A_2A_3)A_4)A_5)((A_6A_7)A_8))$
+\end{itemize}
+
+\subsubsection{Experimento aleatorias 4}
+
+\textbf{Entrada}
+
+\begin{itemize}
+    \item $D = \left< 1000,500,5000,200,3000,2000,10,500,50,20 \right>$
+\end{itemize}
+
+\textbf{Salida}
+
+\begin{itemize}
+    \item $(A_1(A_2(A_3(A_4(A_5A_6)))))((A_7A_8)A_9)$
+\end{itemize}
+
+\subsubsection{Experimento aleatorias 5}
+
+\textbf{Entrada}
+
+\begin{itemize}
+    \item $D = \left< 200,25,100,200,500,1000,500,2000,3000 \right>$
+\end{itemize}
+
+\textbf{Salida}
+
+\begin{itemize}
+    \item $A_1((((((A_2A_3)A_4)A_5)A_6)A_7)A_8)$
+\end{itemize}
+
+\end{document}
