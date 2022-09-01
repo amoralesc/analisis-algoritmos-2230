@@ -195,11 +195,11 @@ Para todas las configuraciones de secuencias de matrices, el protocolo es el mis
 
 Se definirá como uno de los experimentos, una configuración de matrices $D$ donde $d_i = d_{i+1} \forall i \in [1, |D| - 1]$.
 
-\subsubsection{Configuración de matrices ascendientes}
+\subsubsection{Configuración de matrices ascendentes}
 
 Se definirá como uno de los experimentos, una configuración de matrices $D$ donde $d_i < d_{i+1} \forall i \in [1, |D| - 1]$.
 
-\subsubsection{Configuración de matrices descendientes}
+\subsubsection{Configuración de matrices descendentes}
 
 Se definirá como uno de los experimentos, una configuración de matrices $D$ donde $d_{i+1} < d_i \forall i \in [1, |D| - 1]$.
 
@@ -227,7 +227,7 @@ Para este experimento, se define la configuración $D = \left< d_i = d_{i - 1} +
 
 Por razonamiento lógico, se puede determinar que esta configuración es coherente. Si $r_1$ es la menor cantidad de filas, y después de cada operación $A_i A_{i+1}$ la matriz resultante $\in \mathbb{R}^{r_i \times c_{i+1}}$, tiene sentido dejar siempre la matriz de menor dimensión a la izquierda para asegurar siempre la menor cantidad de operaciones. \par
 
-\subsection{Configuración de matrices ascendentes}
+\subsection{Configuración de matrices descendentes}
 
 Para este experimento, se define la configuración $D = \left< d_i = d_{i - 1} - 10 ~|~ 1 \leq i \leq 10 \land d_1 = 100 \right>$. Es decir, 9 matrices $\mathbb{A} = \left< A_1 \in \mathbb{R}^{100 \times 90}, A_2 \in \mathbb{R}^{90 \times 80}, \cdots, A_9 \in \mathbb{R}^{20 \times 10} \right>$. El resultado del experimento es: \par
 
