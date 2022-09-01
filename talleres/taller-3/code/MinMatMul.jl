@@ -1,3 +1,5 @@
+module MinMatMul
+
 function min_mat_mul_backtracking(D)
     M = [0 for i = 1:(length(D) - 1), j = 1:(length(D) - 1)]
     B = [0 for i = 1:(length(D) - 1), j = 1:(length(D) - 1)]
@@ -38,4 +40,7 @@ end
 function min_mat_mul(D)
     B = min_mat_mul_backtracking(D)
     return draw_parentheses(B, 1, length(D) - 1)
+end
+
+export min_mat_mul
 end
