@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 template <class T>
 class BinaryNode {
     protected:
@@ -19,6 +20,15 @@ class BinaryNode {
         bool isLeaf();
         unsigned long long height();
         unsigned long long size();
+        std::vector<T> preOrder();
+        std::vector<T> inOrder();
+        std::vector<T> postOrder();
+        std::vector<T> levelOrder();
+    private:
+        void preOrder(std::vector<T>& v);
+        void inOrder(std::vector<T>& v);
+        void postOrder(std::vector<T>& v);
+        void levelOrder(std::vector<T>& v);
 };
 
 #include "binary_node.hxx"

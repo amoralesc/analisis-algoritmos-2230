@@ -100,3 +100,73 @@ unsigned long long BinaryNode<T>::size() {
 
     return s;
 }
+
+template <class T>
+std::vector<T> BinaryNode<T>::preOrder() {
+    std::vector<T> v;
+    this->preOrder(v);
+    return v;
+}
+
+template <class T>
+void BinaryNode<T>::preOrder(std::vector<T>& v) {
+    v.push_back(this->value);
+    if (this->left != nullptr)
+        (this->left)->preOrder(v);
+    if (this->right != nullptr)
+        (this->right)->preOrder(v);
+}
+
+template <class T>
+std::vector<T> BinaryNode<T>::inOrder() {
+    std::vector<T> v;
+    this->inOrder(v);
+    return v;
+}
+
+template <class T>
+void BinaryNode<T>::inOrder(std::vector<T>& v) {
+    if (this->left != nullptr)
+        (this->left)->inOrder(v);
+    v.push_back(this->value);
+    if (this->right != nullptr)
+        (this->right)->inOrder(v);
+}
+
+template <class T>
+std::vector<T> BinaryNode<T>::postOrder() {
+    std::vector<T> v;
+    this->postOrder(v);
+    return v;
+}
+
+template <class T>
+void BinaryNode<T>::postOrder(std::vector<T>& v) {
+    if (this->left != nullptr)
+        (this->left)->postOrder(v);
+    if (this->right != nullptr)
+        (this->right)->postOrder(v);
+    v.push_back(this->value);
+}
+
+template <class T>
+std::vector<T> BinaryNode<T>::levelOrder() {
+    std::vector<T> v;
+    this->levelOrder(v);
+    return v;
+}
+
+template <class T>
+void BinaryNode<T>::levelOrder(std::vector<T>& v) {
+    std::queue<BinaryNode<T>*> q;
+    q.push(this);
+    while (!q.empty()) {
+        BinaryNode<T>* n = q.front();
+        q.pop();
+        v.push_back(n->value);
+        if (n->left != nullptr)
+            q.push(n->left);
+        if (n->right != nullptr)
+            q.push(n->right);
+    }
+}
