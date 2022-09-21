@@ -1,9 +1,5 @@
 #pragma once
 
-#include <list>
-
-using namespace std;
-
 template <class T>
 class BinaryNode {
     protected:
@@ -21,12 +17,8 @@ class BinaryNode {
         void setLeft(BinaryNode<T>* left);
         void setRight(BinaryNode<T>* right);
         bool isLeaf();
-        int height();
-        int size();
-        //void preOrden(list<T> &datos);
-        //void inOrden(list<T> &datos);
-        //void posOrden(list<T> &datos);
-        //void nivelOrden(list<T> &datos);
+        unsigned long long height();
+        unsigned long long size();
 };
 
 #include "binary_node.hxx"

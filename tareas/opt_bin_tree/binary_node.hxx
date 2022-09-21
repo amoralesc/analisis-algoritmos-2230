@@ -18,11 +18,11 @@ BinaryNode<T>::~BinaryNode() {
     if (this->left != nullptr) {
         delete this->left;
         this->left = nullptr;
-      }
+    }
     if (this->right != nullptr) {
         delete this->right;
         this->right = nullptr;
-      }
+    }
 }
 
 template <class T>
@@ -61,43 +61,42 @@ bool BinaryNode<T>::isLeaf() {
 }
 
 template <class T>
-int BinaryNode<T>::height() {
-    int valt;
+unsigned long long BinaryNode<T>::height() {
+    unsigned long long h;
 
     if (this->isLeaf()) {
-        valt = 0;
-      } else {
-        int valt_left = -1;
-        int valt_right = -1;
+        h = 0;
+    } else {
+        unsigned long long left_height = -1;
+        unsigned long long right_height = -1;
         if (this->left != nullptr)
-            valt_left = (this->left)->height();
+            left_height = (this->left)->height();
         if (this->right != nullptr)
-            valt_right = (this->right)->height();
-        if (valt_left > valt_right)
-            valt = valt_left + 1;
+            right_height = (this->right)->height();
+        if (left_height > right_height)
+            h = left_height + 1;
         else
-            valt = valt_right + 1;
+            h = right_height + 1;
     }
 
-    return valt;
+    return h;
 }
 
 template <class T>
-int BinaryNode<T>::size() {
-    int tam;
+unsigned long long BinaryNode<T>::size() {
+    unsigned long long s;
 
-    if (this->esHoja()) {
-        tam = 1;
+    if (this->isLeaf()) {
+        s = 1;
     } else {
-        int tam_left = 0;
-        int tam_right = 0;
+        unsigned long long left_size = 0;
+        unsigned long long right_size = 0;
         if (this->left != nullptr)
-            tam_left = (this->left)->size();
+            left_size = (this->left)->size();
         if (this->right != nullptr)
-            tam_right = (this->right)->size();
-
-        tam = tam_left + tam_right + 1;
+            right_size = (this->right)->size();
+        s = left_size + right_size + 1;
     }
 
-    return tam;
+    return s;
 }
