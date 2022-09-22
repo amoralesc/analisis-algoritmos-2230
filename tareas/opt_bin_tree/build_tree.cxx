@@ -3,7 +3,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <iomanip>
 
 #include "binary_node.h"
 
@@ -18,13 +17,11 @@ BinaryNode<std::string>* BuildOptTree(
     return nullptr;
 
   unsigned long long k = B[i][j];
+  BinaryNode<std::string>* node = new BinaryNode<std::string>(T[k]);
 
   if (i == j) {
-    BinaryNode<std::string>* node = new BinaryNode<std::string>(T[k]);
     return node;
   }
-
-  BinaryNode<std::string>* node = new BinaryNode<std::string>(T[k]);
 
   node->setLeft(BuildOptTree(T, B, i, k - 1));
   node->setRight(BuildOptTree(T, B, k + 1, j));
@@ -50,7 +47,11 @@ BinaryNode<std::string>* BuildAVLTree(
   return node;
 }
 
-void PrintTreeOrder(BinaryNode<std::string>* node, std::string order) {
+void PrintTreeOrder(
+  BinaryNode<std::string>* node,
+  std::string order
+  ) 
+{
   if (node == nullptr)
     return;
 
@@ -74,22 +75,12 @@ void PrintTreeOrder(BinaryNode<std::string>* node, std::string order) {
   std::cout << std::endl;
 }
 
-template <class T>
-void PrintMatrix(const std::vector<std::vector<T>>& M) {
-  for (unsigned long long i = 0; i < M.size(); i++) {
-    for (unsigned long long j = 0; j < M[i].size(); j++) {
-      std::cout << std::setw(3) << M[i][j] << " ";
-    }
-    std::cout << std::endl;
-  }
-}
-
 double BuildTree(
   const std::vector< std::string >& T,
   const std::vector< double >& P,
   const std::vector< double >& Q,
-  BinaryNode<std::string>* root_opt,
-  BinaryNode<std::string>* root_avl
+  BinaryNode<std::string>* &root_opt,
+  BinaryNode<std::string>* &root_avl
   )
 {
   std::vector< std::vector< double > > M( Q.size( ), std::vector< double >( Q.size( ), 0 ) );
@@ -127,20 +118,34 @@ double BuildTree(
     } // end for
   } // end for
 
-  PrintMatrix(M);
-  std::cout << std::endl;
-  PrintMatrix(B);
-
   // Build Opt Tree
   root_opt = BuildOptTree(T, B, 0, T.size() - 1);
   // Build AVL Tree
   root_avl = BuildAVLTree(T, 0, T.size());
 
-  // preorder
-  PrintTreeOrder(root_opt, "pre"); 
-  PrintTreeOrder(root_avl, "pre");
-
   return( M[ 1 ][ P.size( ) ] );
+}
+
+void LeastJumpsToFindMaxExperiment(
+  BinaryNode<std::string>* root_opt,
+  BinaryNode<std::string>* root_avl,
+  std::string word
+) {
+  std::cout << "Least jumps to find the max word experiment" << std::endl;
+  std::cout << "Word: " << word << std::endl;
+
+  const long long opt = root_opt->find(word);
+  const long long avl = root_avl->find(word);
+
+  std::cout << "Optimal tree: " << opt << std::endl;
+  std::cout << "AVL tree: " << avl << std::endl;
+
+  if (opt < avl)
+    std::cout << "Optimal tree is better" << std::endl;
+  else if (opt > avl)
+    std::cout << "AVL tree is better" << std::endl;
+  else
+    std::cout << "Both trees are the same" << std::endl;
 }
 
 int main( int argc, char** argv )
@@ -152,6 +157,9 @@ int main( int argc, char** argv )
   std::string line;
   Q.push_back( 1 );
   double nP = 0;
+
+  std::string max_word;
+  double times_max_word = 0;
   while( std::getline( file, line ) )
   {
     std::istringstream in_line( line );
@@ -159,6 +167,12 @@ int main( int argc, char** argv )
     P.push_back( 0 );
     Q.push_back( 1 );
     in_line >> T.back( ) >> P.back( );
+
+    if (P.back() > times_max_word) {
+      max_word = T.back();
+      times_max_word = P.back();
+    }
+
     nP += P.back( );
   } // end while
 
@@ -175,7 +189,9 @@ int main( int argc, char** argv )
   BinaryNode<std::string>* root_opt;
   BinaryNode<std::string>* root_avl;
   double R = BuildTree(T, P, Q, root_opt, root_avl);
-  std::cout << R << std::endl;
+  std::cout << "R: " << R << std::endl << std::endl;
+
+  LeastJumpsToFindMaxExperiment(root_opt, root_avl, max_word);
 
   return( EXIT_SUCCESS );
 }

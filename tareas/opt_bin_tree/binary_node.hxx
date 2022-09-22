@@ -104,6 +104,35 @@ unsigned long long BinaryNode<T>::size() {
 }
 
 template <class T>
+long long BinaryNode<T>::find(T value) {
+    return this->find(value, 0);
+}
+
+template <class T>
+long long BinaryNode<T>::find(T value, long long depth) {
+    if (value == this->value) {
+        return depth;
+    }
+    // The binary tree is ordered, so we can use this to reduce the search space
+    // If it's a leaf, we can't go further
+    if (this->isLeaf()) {
+        return -1;
+    }
+    // Search in the left and right subtrees
+    if (value < this->value) {
+        if (this->left != nullptr) {
+            return (this->left)->find(value, depth + 1);
+        }
+    } else {
+        if (this->right != nullptr) {
+            return (this->right)->find(value, depth + 1);
+        }
+    }
+    // If we get here, the value is not in the tree
+    return -1;
+}
+
+template <class T>
 std::vector<T> BinaryNode<T>::preOrder() {
     std::vector<T> v;
     this->preOrder(v);
