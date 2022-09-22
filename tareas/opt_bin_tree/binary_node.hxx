@@ -1,5 +1,7 @@
 #include "binary_node.h"
 
+#include <queue>
+
 template <class T>
 BinaryNode<T>::BinaryNode() {
     this->left = nullptr;
