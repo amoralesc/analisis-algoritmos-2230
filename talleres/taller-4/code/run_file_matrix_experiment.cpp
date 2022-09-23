@@ -17,7 +17,6 @@
 
 std::vector<std::vector<unsigned int>> readMatrix(std::string filename) {
     std::ifstream file(filename);
-    
     if (!file.is_open()) {
         std::cerr << "Error opening file " << filename << std::endl;
         exit(-1);
@@ -32,8 +31,8 @@ std::vector<std::vector<unsigned int>> readMatrix(std::string filename) {
             file >> matrix[i][j];
         }
     }
-
     file.close();
+    
     return matrix;
 }
 
