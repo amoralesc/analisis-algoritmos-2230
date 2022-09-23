@@ -32,6 +32,8 @@ std::vector<std::vector<unsigned int>> readMatrix(std::string filename) {
             file >> matrix[i][j];
         }
     }
+
+    file.close();
     return matrix;
 }
 
