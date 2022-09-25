@@ -1,9 +1,23 @@
 #include "longest_sorted_neighbors.h"
 
-#include <iostream>
 #include <algorithm>    // std::max
 #include <utility>      // std::pair, std::make_pair
 
+/**
+ * @brief Computes the next best neighbor of a given cell recursively,
+ * that is, the cell that is the neighbor that will keep finding more
+ * neighbors in any direction.
+ * 
+ * A neighbor is a cell that is adjacent to the given cell and has a
+ * value lower by 1 than the given cell.
+ * 
+ * @param matrix the matrix
+ * @param i the row of the cell
+ * @param j the column of the cell
+ * @param M memoization matrix
+ * @param B backtracking matrix
+ * @return (unsigned int) the max length of the sequence of neighbors
+ */
 unsigned int longestSortedNeighbors(
     std::vector<std::vector<unsigned int>> &matrix, 
     unsigned int i, unsigned int j,
@@ -34,6 +48,14 @@ unsigned int longestSortedNeighbors(
     return M[i][j];
 }
 
+/**
+ * @brief Computes the longest sequence of sorted neighbors in a matrix.
+ * The sequence is defined as a sequence of cells that are adjacent to
+ * each other and have a value greater by 1 than the previous cell.
+ * 
+ * @param matrix the matrix
+ * @return (std::vector<unsigned int>) the sequence of sorted neighbors
+ */
 std::vector<unsigned int> longestSortedNeighbors(
     std::vector<std::vector<unsigned int>> matrix
 ) {

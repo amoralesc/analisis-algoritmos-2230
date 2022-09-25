@@ -15,6 +15,12 @@
 
 #include "longest_sorted_neighbors.h"
 
+/**
+ * @brief Read a matrix from a file
+ * 
+ * @param filename path to the CSV file containing the matrix
+ * @return (std::vector<std::vector<unsigned int>>) the matrix
+ */
 std::vector<std::vector<unsigned int>> readMatrix(std::string filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
