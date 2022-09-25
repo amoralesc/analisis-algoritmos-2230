@@ -2,38 +2,7 @@
 
 #include <algorithm>
 
-/*
-unsigned int longestSortedNeighborsNaive(
-    std::vector<std::vector<unsigned int>> &matrix, unsigned int i, unsigned int j
-) {
-    unsigned int max = 0;
-    if (i > 0 && matrix[i][j] + 1 == matrix[i - 1][j]) {
-        max = std::max(max, longestSortedNeighbors(matrix, i - 1, j));
-    }
-    if (i < matrix.size() - 1 && matrix[i][j] + 1 == matrix[i + 1][j]) {
-        max = std::max(max, longestSortedNeighbors(matrix, i + 1, j));
-    }
-    if (j > 0 && matrix[i][j] + 1 == matrix[i][j - 1]) {
-        max = std::max(max, longestSortedNeighbors(matrix, i, j - 1));
-    }
-    if (j < matrix[0].size() - 1 && matrix[i][j] + 1 == matrix[i][j + 1]) {
-        max = std::max(max, longestSortedNeighbors(matrix, i, j + 1));
-    }
-    return max + 1;
-}
-
-unsigned int longestSortedNeighborsNaive(std::vector<std::vector<unsigned int>> matrix) {
-    unsigned int max = 0;
-    for (unsigned int i = 0; i < matrix.size(); i++) {
-        for (unsigned int j = 0; j < matrix[0].size(); j++) {
-            max = std::max(max, longestSortedNeighbors(matrix, i, j));
-        }
-    }
-    return max;
-}
-*/
-
-unsigned int longestSortedNeighborsMemoization(
+unsigned int longestSortedNeighbors(
     std::vector<std::vector<unsigned int>> &matrix, 
     unsigned int i, unsigned int j,
     std::vector<std::vector<unsigned int>> &memo
@@ -42,17 +11,17 @@ unsigned int longestSortedNeighborsMemoization(
         return memo[i][j];
     }
     unsigned int max = 0;
-    if (i > 0 && matrix[i][j] + 1 == matrix[i - 1][j]) {
-        max = std::max(max, longestSortedNeighborsMemoization(matrix, i - 1, j, memo));
+    if (i > 0 && matrix[i][j] - 1 == matrix[i - 1][j]) {
+        max = std::max(max, longestSortedNeighbors(matrix, i - 1, j, memo));
     }
-    if (i < matrix.size() - 1 && matrix[i][j] + 1 == matrix[i + 1][j]) {
-        max = std::max(max, longestSortedNeighborsMemoization(matrix, i + 1, j, memo));
+    if (i < matrix.size() - 1 && matrix[i][j] - 1 == matrix[i + 1][j]) {
+        max = std::max(max, longestSortedNeighbors(matrix, i + 1, j, memo));
     }
-    if (j > 0 && matrix[i][j] + 1 == matrix[i][j - 1]) {
-        max = std::max(max, longestSortedNeighborsMemoization(matrix, i, j - 1, memo));
+    if (j > 0 && matrix[i][j] - 1 == matrix[i][j - 1]) {
+        max = std::max(max, longestSortedNeighbors(matrix, i, j - 1, memo));
     }
-    if (j < matrix[0].size() - 1 && matrix[i][j] + 1 == matrix[i][j + 1]) {
-        max = std::max(max, longestSortedNeighborsMemoization(matrix, i, j + 1, memo));
+    if (j < matrix[0].size() - 1 && matrix[i][j] - 1 == matrix[i][j + 1]) {
+        max = std::max(max, longestSortedNeighbors(matrix, i, j + 1, memo));
     }
     memo[i][j] = max + 1;
     return memo[i][j];
@@ -64,7 +33,7 @@ unsigned int longestSortedNeighbors(std::vector<std::vector<unsigned int>> matri
     for (unsigned int i = 0; i < matrix.size(); i++) {
         for (unsigned int j = 0; j < matrix[0].size(); j++) {
             if (memo[i][j] == 0) {
-                max = std::max(max, longestSortedNeighborsMemoization(matrix, i, j, memo));
+                max = std::max(max, longestSortedNeighbors(matrix, i, j, memo));
             } else {
                 max = std::max(max, memo[i][j]);
             }
