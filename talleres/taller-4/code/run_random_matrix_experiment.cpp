@@ -84,5 +84,9 @@ int main(int argc, char* argv[]) {
         std::cout << std::endl;
     }
 
-    std::cout << "Result: " << longestSortedNeighbors(matrix) << std::endl;
+    std::vector<unsigned int> result = longestSortedNeighbors(matrix);
+    std::cout << "Result (" << result.size() << "): " << std::endl;
+    for (unsigned int i = 0; i < result.size(); i++) {
+        std::cout << result[i] << " ";
+    }
 }
