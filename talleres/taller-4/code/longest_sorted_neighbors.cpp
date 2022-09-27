@@ -1,6 +1,6 @@
 #include "longest_sorted_neighbors.h"
 
-#include <algorithm>    // std::max
+#include <algorithm>    // std::max, std::reverse
 #include <utility>      // std::pair, std::make_pair
 
 /**
@@ -30,19 +30,27 @@ unsigned int longestSortedNeighbors(
     unsigned int max = 0;
     if (i > 0 && matrix[i][j] - 1 == matrix[i - 1][j]) {
         max = std::max(max, longestSortedNeighbors(matrix, i - 1, j, M, B));
-        B[i][j] = std::make_pair(i - 1, j);
+        if (max == M[i - 1][j]) {
+            B[i][j] = std::make_pair(i - 1, j);
+        }
     }
     if (i < matrix.size() - 1 && matrix[i][j] - 1 == matrix[i + 1][j]) {
         max = std::max(max, longestSortedNeighbors(matrix, i + 1, j, M, B));
-        B[i][j] = std::make_pair(i + 1, j);
+        if (max == M[i + 1][j]) {
+            B[i][j] = std::make_pair(i + 1, j);
+        }
     }
     if (j > 0 && matrix[i][j] - 1 == matrix[i][j - 1]) {
         max = std::max(max, longestSortedNeighbors(matrix, i, j - 1, M, B));
-        B[i][j] = std::make_pair(i, j - 1);
+        if (max == M[i][j - 1]) {
+            B[i][j] = std::make_pair(i, j - 1);
+        }
     }
     if (j < matrix[0].size() - 1 && matrix[i][j] - 1 == matrix[i][j + 1]) {
         max = std::max(max, longestSortedNeighbors(matrix, i, j + 1, M, B));
-        B[i][j] = std::make_pair(i, j + 1);
+        if (max == M[i][j + 1]) {
+            B[i][j] = std::make_pair(i, j + 1);
+        }
     }
     M[i][j] = max + 1;
     return M[i][j];
